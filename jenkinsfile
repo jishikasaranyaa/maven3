@@ -1,0 +1,44 @@
+pipeline
+{
+    agent any
+    stages
+    {
+        stage('ContinuousDownload')
+        {
+            steps
+            {
+               git 'https://github.com/jishikasaranyaa/maven2.git' 
+            }
+        }
+        stage('ContinuousBuild')
+        {
+            steps
+            {
+                sh 'mvn package'
+            }
+        }
+        stage('ContinuousDeployment')
+        {
+            steps
+            {
+                deploy adapters: [tomcat9(credentialsId: 'cade070d-fb6c-4522-bdc5-b92b8a50e196', path: '', url: 'http://172.31.2.136:8080')], contextPath: 'test3', war: '**/*.war'
+            }
+        }
+        stage('ContinuousTesting')
+        {
+            steps
+            {
+                git 'https://github.com/intelliqittrainings/FunctionalTesting.git'
+                sh 'java -jar /home/ubuntu/.jenkins/workspace/DeclarativePipeline/testing.jar'
+            }
+        }
+        stage('ContinuousDelivery')
+        {
+            steps
+            {
+                input message: 'need approval from DM', submitter: 'nag'
+                deploy adapters: [tomcat9(credentialsId: 'cade070d-fb6c-4522-bdc5-b92b8a50e196', path: '', url: 'http://172.31.14.130:8080')], contextPath: 'prod3', war: '**/*.war'
+            }
+        }
+    }
+}
