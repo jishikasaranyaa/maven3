@@ -3,28 +3,28 @@ pipeline
     agent any
     stages
     {
-        stage('ContinuousDownload')
+        stage('ContinuousDownload_Master')
         {
             steps
             {
-              git 'https://github.com/jishikasaranyaa/maven2.git' 
+              git 'https://github.com/jishikasaranyaa/maven3.git' 
             }
         }
-        stage('ContinuousBuild')
+        stage('ContinuousBuild_Master')
         {
             steps
             {
                 sh 'mvn package'
             }
         }
-        stage('ContinuousDeployment')
+        stage('ContinuousDeployment_Master')
         {
             steps
             {
               sh 'scp /home/ubuntu/.jenkins/workspace/DeclarativePipeline1/webapp/target/webapp.war ubuntu@172.31.2.136:/var/lib/tomcat9/webapps/testapp.war'  
             }
         }
-        stage('ContinuousTesting')
+        stage('ContinuousTesting_Master')
         {
             steps
             {
@@ -32,7 +32,7 @@ pipeline
                 sh 'java -jar /home/ubuntu/.jenkins/workspace/DeclarativePipeline/testing.jar'
             }
         }
-        stage('ContinuousDelivery')
+        stage('ContinuousDelivery_Master')
         {
             steps
             {
