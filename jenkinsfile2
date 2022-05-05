@@ -3,42 +3,20 @@ pipeline
     agent any
     stages
     {
-        stage('ContinuousDownload_Master')
+        stage('ContinuousDownload_Loan')
         {
             steps
             {
               git 'https://github.com/jishikasaranyaa/maven3.git' 
             }
         }
-        stage('ContinuousBuild_Master')
+        stage('ContinuousBuild_Loans')
         {
             steps
             {
                 sh 'mvn package'
             }
         }
-        stage('ContinuousDeployment_Master')
-        {
-            steps
-            {
-              sh 'scp /home/ubuntu/.jenkins/workspace/DeclarativePipeline1/webapp/target/webapp.war ubuntu@172.31.2.136:/var/lib/tomcat9/webapps/testapp.war'  
-            }
-        }
-        stage('ContinuousTesting_Master')
-        {
-            steps
-            {
-                git 'https://github.com/intelliqittrainings/FunctionalTesting.git'
-                sh 'java -jar /home/ubuntu/.jenkins/workspace/DeclarativePipeline/testing.jar'
-            }
-        }
-        stage('ContinuousDelivery_Master')
-        {
-            steps
-            {
-                input message: 'need approval from DM', submitter: 'nag'
-                sh 'scp /home/ubuntu/.jenkins/workspace/DeclarativePipeline1/webapp/target/webapp.war ubuntu@172.31.14.130:/var/lib/tomcat9/webapps/prodapp.war'
-            }
-        }
+        
     }
 }
